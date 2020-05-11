@@ -1,4 +1,5 @@
-import random,time
+import random, time
+
 
 def splashscreen():
     print(r"""\
@@ -15,7 +16,6 @@ def splashscreen():
 
 
 def startjogo():
-
     print("Pressione qualquer tecla para jogar, pressione X para fechar o jogo")
     escolha = input()
     if escolha == "x":
@@ -23,10 +23,16 @@ def startjogo():
     else:
         return True
 
+
 def timer():
     clock = time.time()
     return clock
 
+
+def endtimer(timer):
+    timer = time.time() - timer
+    timer = time.strftime("%M:%S", time.gmtime(timer))
+    print("Tempo Jogado até sua morte iminente: ", timer)
 
 
 def escolhajogo(escolha):
@@ -39,15 +45,18 @@ def escolhajogo(escolha):
     elif escolha == 4:
         return 4
 
+
 def ataquePlayer():
     atkdmg = [0, 35, 70, 100]
     atk = random.choice(atkdmg)
     return atk
 
+
 def ataqueNPC():
     atkdmg = [0, 15, 20]
     atk = random.choice(atkdmg)
     return atk
+
 
 def batalha(enemyHP, playerHP):
     turno = 1
@@ -76,13 +85,10 @@ def batalha(enemyHP, playerHP):
         time.sleep(3.0)
         return False
 
+
 def batalharandom():
     batalhatrue = random.randint(0, 100)
     return batalhatrue
-
-
-
-
 
 
 splashscreen()
@@ -90,12 +96,12 @@ start = startjogo()
 clockStart = timer()
 playerHP = 100
 
-while start != False:
+while start:
 
     print("Escolha aqui")
     print("Qual é a sua escolha?")
-    escolha1 = int(input())
-    escolhaResult = escolhajogo(escolha1)
+    escolha = int(input())
+    escolhaResult = escolhajogo(escolha)
 
     if escolhaResult == 1:
         print("Você Morreu")
@@ -107,23 +113,28 @@ while start != False:
         startjogo()
     elif escolhaResult == 2:
         batalhachance = batalharandom()
-        print(batalhachance)
+
         if batalhachance <= 65:
+            print("Um Inimigo aparece na sua frente, Deseja atacar ou fugir?")
+            print("X para escapar")
+            escolha = input()
+            if escolha != "x":
+                enemyHP = 100
+                print("Você o ataca")
+                batalha = batalha(enemyHP, playerHP)
 
-            print("Um inimigo está a sua frente")
-            enemyHP = 100
-
-            turno = 1
-            print("Você o ataca")
-            batalha1 = batalha(enemyHP, playerHP)
-
-            if batalha1 == False:
+            if batalha == False:
                 start = False
+
+        elif batalhachance >= 66:
+            print("Você não encontra nada neste caminho")
 
     elif escolhaResult == 3:
         print("O inimigo Escapou")
+
     elif escolhaResult == 4:
         print("O universo inteiro se despedaça ao seu redor")
+
     else:
         print("Escolha uma opção válida")
 
@@ -131,8 +142,3 @@ else:
     print("")
     print("")
     startjogo()
-
-
-
-
-

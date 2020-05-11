@@ -23,6 +23,12 @@ def startjogo():
     else:
         return True
 
+def timer():
+    clock = time.time()
+    return clock
+
+
+
 def escolhajogo(escolha):
     if escolha == 1:
         return 1
@@ -81,7 +87,7 @@ def batalharandom():
 
 splashscreen()
 start = startjogo()
-clockStart = time.time()
+clockStart = timer()
 playerHP = 100
 
 while start != False:
@@ -94,7 +100,7 @@ while start != False:
     if escolhaResult == 1:
         print("Você Morreu")
         start = False
-        endClock = time.time() - clockStart
+        endClock = timer() - clockStart
         endClock = time.strftime("%M:%S", time.gmtime(endClock))
         print("Tempo Jogado até sua morte iminente: ", endClock)
         time.sleep(3.0)

@@ -118,9 +118,7 @@ while start:
     if escolhaResult == 1:
         print("Você Morreu")
         start = False
-        endClock = timer() - clockStart
-        endClock = time.strftime("%M:%S", time.gmtime(endClock))
-        print("Tempo Jogado até sua morte iminente: ", endClock)
+        endtimer(clockStart)
         time.sleep(3.0)
         startjogo()
     elif escolhaResult == 2:

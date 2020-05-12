@@ -1,4 +1,4 @@
-import random, time
+import random, time, os
 
 
 def splashscreen():
@@ -16,10 +16,10 @@ def splashscreen():
 
 
 def startjogo():
-    print("Pressione qualquer tecla para jogar, pressione X para fechar o jogo")
-    escolha = input()
-    if escolha == "x":
+    escolha = input("Pressione qualquer tecla para jogar, pressione X para fechar o jogo")
+    if escolha == "x" or escolha == "X":
         return False
+        quit()
     else:
         return True
 
@@ -58,32 +58,44 @@ def ataqueNPC():
     return atk
 
 
-def batalha(enemyHP, playerHP):
-    turno = 1
+def batalha(enemyHP, playerHP, turno):
     while enemyHP > 0 and playerHP > 0:
         if turno == 1:
+            turno -= 1
             atk = ataquePlayer()
             enemyHP -= atk
             if enemyHP < 0:
                 enemyHP = 0
-
+            print(turno)
             print("Voce deu {} de dano, o inimigo tem {} de vida".format(atk, enemyHP))
+            input("Enter para continuar")
+
+        if turno == 0 and enemyHP > 0:
             turno += 1
-        if turno == 2 and enemyHP > 0:
-            turno -= 1
             atkNPC = ataqueNPC()
             playerHP -= atkNPC
             if playerHP < 0:
                 playerHP = 0
-
+            print(turno)
             print("O Inimigo lhe causou {} de dano, voce ainda tem {} de vida".format(atkNPC,
                                                                                       playerHP))
+            input("Enter para continuar")
+
     if enemyHP == 0:
         print("Voce Ganhou a batalha, lhe resta {} de vida".format(playerHP))
+        return playerHP
+        # final da batalha, setar variavel usando esta função
     elif playerHP == 0:
         print("Você morreu, o inimigo ainda vive com {} de vida".format(enemyHP))
         time.sleep(3.0)
         return False
+        # volta pro começo do jogo
+
+
+def vantagemRoll():
+    vantagem = [0, 1]
+    roll = random.choice(vantagem)
+    return roll
 
 
 def batalharandom():
@@ -115,15 +127,26 @@ while start:
         batalhachance = batalharandom()
 
         if batalhachance <= 65:
+            rollChance = vantagemRoll()
             print("Um Inimigo aparece na sua frente, Deseja atacar ou fugir?")
             print("X para escapar")
+            if rollChance == 1:
+                print("Você aparenta ter uma vantagem extra")
+            else:
+                print("O inimigo aparenta ter uma vantagem extra")
             escolha = input()
+
             if escolha != "x":
                 enemyHP = 100
                 print("Você o ataca")
-                batalha = batalha(enemyHP, playerHP)
+                batalha1 = batalha(enemyHP, playerHP, rollChance)
 
-            if batalha == False:
+                playerHP = batalha1
+            else:
+
+                print("Você escapou, faça a proxima escolha")
+
+            if not batalha:
                 start = False
 
         elif batalhachance >= 66:
@@ -139,6 +162,7 @@ while start:
         print("Escolha uma opção válida")
 
 else:
+    print("")
     print("")
     print("")
     startjogo()

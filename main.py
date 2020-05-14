@@ -85,6 +85,7 @@ def batalha(enemyHP, playerHP, turno):
         print("Voce Ganhou a batalha, lhe resta {} de vida".format(playerHP))
         return playerHP
         # final da batalha, setar variavel usando esta função
+
     elif playerHP == 0:
         print("Você morreu, o inimigo ainda vive com {} de vida".format(enemyHP))
         time.sleep(3.0)
@@ -120,7 +121,6 @@ while start:
         start = False
         endtimer(clockStart)
         time.sleep(3.0)
-        startjogo()
     elif escolhaResult == 2:
         batalhachance = batalharandom()
 
@@ -146,7 +146,6 @@ while start:
 
             if not batalha:
                 start = False
-
         elif batalhachance >= 66:
             print("Você não encontra nada neste caminho")
 

@@ -1,4 +1,6 @@
-import random, time, os
+import random
+import time
+import historia
 
 
 def splashscreen():
@@ -37,28 +39,33 @@ def endtimer(timer):
 
 def escolhajogo(escolha):
     if escolha == 1:
-        return 1
+        return "1"
     elif escolha == 2:
-        return 2
+        return "2"
     elif escolha == 3:
-        return 3
+        return "3"
     elif escolha == 4:
-        return 4
+        return "4"
 
 
 def ataquePlayer():
-    atkdmg = [0, 35, 70, 100]
+    atkdmg = [0, 35, 70, 100    ]
     atk = random.choice(atkdmg)
     return atk
 
 
 def ataqueNPC():
-    atkdmg = [0, 15, 20]
+    atkdmg = [0, 15, 30]
     atk = random.choice(atkdmg)
     return atk
 
 
 def batalha(enemyHP, playerHP, turno):
+    if turno == 1:
+        print("Você começa atacando")
+    else:
+        print("O inimigo lhe ataca primeiro ")
+
     while enemyHP > 0 and playerHP > 0:
         if turno == 1:
             turno -= 1
@@ -66,7 +73,6 @@ def batalha(enemyHP, playerHP, turno):
             enemyHP -= atk
             if enemyHP < 0:
                 enemyHP = 0
-            print(turno)
             print("Voce deu {} de dano, o inimigo tem {} de vida".format(atk, enemyHP))
             input("Enter para continuar")
 
@@ -76,7 +82,6 @@ def batalha(enemyHP, playerHP, turno):
             playerHP -= atkNPC
             if playerHP < 0:
                 playerHP = 0
-            print(turno)
             print("O Inimigo lhe causou {} de dano, voce ainda tem {} de vida".format(atkNPC,
                                                                                       playerHP))
             input("Enter para continuar")
@@ -109,54 +114,70 @@ start = startjogo()
 clockStart = timer()
 playerHP = 100
 
-while start:
 
+nome = input("Digite o Nome do Aventureiro >> ")
+
+while start:
+    historia.intro()
     print("Escolha aqui")
     print("Qual é a sua escolha?")
     escolha = int(input())
-    escolhaResult = escolhajogo(escolha)
-
-    if escolhaResult == 1:
-        print("Você Morreu")
+    # escolhaResult = escolhajogo(escolha)
+    etapa1 = historia.etapa1(escolha, nome)
+    if etapa1 == False:
         start = False
-        endtimer(clockStart)
-        time.sleep(3.0)
-    elif escolhaResult == 2:
-        batalhachance = batalharandom()
 
-        if batalhachance <= 65:
-            rollChance = vantagemRoll()
-            print("Um Inimigo aparece na sua frente, Deseja atacar ou fugir?")
-            print("X para escapar")
-            if rollChance == 1:
-                print("Você aparenta ter uma vantagem extra")
-            else:
-                print("O inimigo aparenta ter uma vantagem extra")
-            escolha = input()
+    historia.intro2(nome)
+    print("Escolha aqui")
+    print("Qual é a sua escolha?")
+    escolha = int(input())
+    etapa2 = historia.etapa2(escolha)
+    if etapa2 == 1:
+        playerHP -= 30
+    elif etapa2 == 2:
+        enemyHP = 100
+        batalha(enemyHP, playerHP, 1)
+    elif etapa2 == 3:
+        enemyHP = 100
+        batalha(enemyHP, playerHP, 1)
+    elif etapa2 == False:
+        start = False
 
-            if escolha != "x":
-                enemyHP = 100
-                print("Você o ataca")
-                batalha1 = batalha(enemyHP, playerHP, rollChance)
+    historia.intro3()
+    print("Escolha aqui")
+    print("Qual é a sua escolha?")
+    escolha = int(input())
+    etapa3 = historia.etapa3(escolha)
+    if etapa3 == 100:
+        playerHP = 100
 
-                playerHP = batalha1
-            else:
 
-                print("Você escapou, faça a proxima escolha")
+    historia.intro4()
+    print("Escolha aqui")
+    print("Qual é a sua escolha?")
+    escolha = int(input())
+    etapa4 = historia.etapa4(escolha)
+    if etapa4 is True:
+        historia.intro5()
+    elif etapa4 is False:
+        historia.intro4_1()
+        print("Escolha aqui")
+        print("Qual é a sua escolha?")
+        escolha = int(input())
+        etapa41 = historia.etapa4_1(escolha)
+        if etapa41 == 1:
+            playerHP = 200
+        elif etapa41 == 2:
+            enemyHP = 100
+            batalha(enemyHP, playerHP, 0)
+        elif etapa41 == 3: # todo sei la o andrey tem autismo??
+            print()
+        elif etapa41 == 4:
+            playerATK = [ 0, 60, 85, 100]
 
-            if not batalha:
-                start = False
-        elif batalhachance >= 66:
-            print("Você não encontra nada neste caminho")
-
-    elif escolhaResult == 3:
-        print("O inimigo Escapou")
-
-    elif escolhaResult == 4:
-        print("O universo inteiro se despedaça ao seu redor")
-
-    else:
-        print("Escolha uma opção válida")
+    historia.intro5()
+    enemyHP = 300
+    batalha(enemyHP, playerHP, 0)
 
 else:
     print("")

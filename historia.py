@@ -1,9 +1,9 @@
 import random
 
 
-def intro():
+def intro(name):
     print("há séculos, em uma pequena vila chamada Northbury, o Lord Blackbird, a mando do rei")
-    print("chamou o aventureiro (nome do jogador aqui) para uma missão perigosa.")
+    print("chamou o aventureiro " + name + " para uma missão perigosa.")
     print("O Lord deu duas opções ao aventureiro")
     print("1 – aceitar a missão que lhe foi dada")
     print("2 – sofrer as consequencias de não seguir as ordens do rei")
@@ -113,7 +113,7 @@ def etapa4_1(escolha):
     elif escolha == 3:
         print("Você Conquista a confiança dos saqueadores e os saqueadores acreditam que você"
               "é o lider perdido deles,"
-              "então conta sobre a vila para ter ajuda a derrotar o monstro")
+              "então conta sobre a mina para ter ajuda a derrotar o monstro")
         return 3
     elif escolha == 4:
         print("Os saqueadores se juntam com o guerreiro para ir a mina derrotar o monstro.")

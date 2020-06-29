@@ -61,29 +61,33 @@ def ataqueNPC(atk):
 #todo adicionar atk de npc e player na função de batalha
 #randomizar em cada instancia
 
-def batalha(enemyHP, playerHP, turno, atkPlayer, atkNPC):
+def batalha(enemyHP, playerhp, atkPlayer, atkNPC):
+    turno = random.randint(0,1)
+
     if turno == 1:
         print("Você começa atacando")
     else:
         print("O inimigo lhe ataca primeiro ")
 
-    while enemyHP > 0 and playerHP > 0:
+    while enemyHP > 0 and playerhp > 0:
         if turno == 1:
             turno -= 1
-            atk = ataquePlayer(atkPlayer)
-            enemyHP -= atk
+            # atk = ataquePlayer(atkPlayer)
+            dano = random.choice(atkPlayer)
+            enemyHP -= dano
             if enemyHP < 0:
                 enemyHP = 0
-            print("Voce deu {} de dano, o inimigo tem {} de vida".format(atk, enemyHP))
+            print("Voce deu {} de dano, o inimigo tem {} de vida".format(dano, enemyHP))
             input("Enter para continuar")
 
         if turno == 0 and enemyHP > 0:
             turno += 1
-            atkNPC = ataqueNPC(atkNPC)
-            playerHP -= atkNPC
-            if playerHP < 0:
-                playerHP = 0
-            print("O Inimigo lhe causou {} de dano, voce ainda tem {} de vida".format(atkNPC,
+            dano = random.choice(atkNPC)
+            #atkNPC = ataqueNPC(atkNPC)
+            playerhp -= dano
+            if playerhp < 0:
+                playerhp = 0
+            print("O Inimigo lhe causou {} de dano, voce ainda tem {} de vida".format(dano,
                                                                                       playerHP))
             input("Enter para continuar")
 
@@ -95,7 +99,7 @@ def batalha(enemyHP, playerHP, turno, atkPlayer, atkNPC):
     elif playerHP == 0:
         print("Você morreu, o inimigo ainda vive com {} de vida".format(enemyHP))
         time.sleep(3.0)
-        return False
+        return playerHP
         # volta pro começo do jogo
 
 
@@ -114,7 +118,7 @@ splashscreen()
 start = startjogo()
 clockStart = timer()
 playerHP = 100
-atkP = [0, 35, 70, 100]
+atkP = [0, 35, 70]
 atkNPC = [0, 15, 30]
 
 nome = input("Digite o Nome do Aventureiro >> ")
@@ -126,23 +130,39 @@ while start:
     escolha = int(input())
     # escolhaResult = escolhajogo(escolha)
     etapa1 = historia.etapa1(escolha, nome)
-    if etapa1 == False:
+
+    if etapa1 == 2:
         start = False
+        continue
+
 
     historia.intro2(nome)
     print("Escolha aqui")
     print("Qual é a sua escolha?")
     escolha = int(input())
-    etapa2 = historia.etapa2(escolha)
+    etapa2 = historia.etapa2(escolha,nome)
     if etapa2 == 1:
         playerHP -= 30
     elif etapa2 == 2:
         enemyHP = 100
-        batalha(enemyHP, playerHP, 1, atkP, atkNPC)
+        batalha = batalha(enemyHP, playerHP, atkP, atkNPC)
+        if batalha == 0:
+            start = False
+            continue
+        else:
+            playerHP = batalha
+            batalha = 0
+            print(playerHP)
     elif etapa2 == 3:
-        atkP = [0, 69]
         enemyHP = 100
-        batalha(enemyHP, playerHP, 1, atkP, atkNPC)
+        batalha = batalha(enemyHP, playerHP, atkP, atkNPC)
+        if batalha == 0:
+            start = False
+            continue
+        else:
+            playerHP = batalha
+            print(playerHP)
+
     elif etapa2 == False:
         start = False
 
@@ -151,18 +171,20 @@ while start:
     print("Qual é a sua escolha?")
     escolha = int(input())
     etapa3 = historia.etapa3(escolha)
-    if etapa3 == 100:
+    if etapa3 == 1 or etapa3 == 2:
         playerHP = 100
-
+    elif etapa3 == 4:
+        playerHP -= 10
 
     historia.intro4()
     print("Escolha aqui")
     print("Qual é a sua escolha?")
     escolha = int(input())
     etapa4 = historia.etapa4(escolha)
-    if etapa4 == True:
+    if etapa4 == 1:
         historia.intro5()
-    elif etapa4 == False:
+        time.sleep(2.0)
+    else:
         historia.intro4_1()
         print("Escolha aqui")
         print("Qual é a sua escolha?")
@@ -172,17 +194,25 @@ while start:
             playerHP = 150
         elif etapa41 == 2:
             enemyHP = 100
-            batalha(enemyHP, playerHP, 0)
+            batalha41 = batalha(enemyHP, playerHP, atkP, atkNPC)
+            if batalha == False:
+                start = False
+                continue
+            else:
+                playerHP = batalha
         elif etapa41 == 3: # todo sei la o andrey tem autismo??
             print()
         elif etapa41 == 4:
-            playerATK = [0, 60, 85, 100]
+            atkP = [0, 60, 85, 100]
 
-    historia.intro5()
-    time.sleep(2.0)
+        historia.intro5()
+        time.sleep(2.0)
+
     enemyHP = 300
-    batalha(enemyHP, playerHP, 0)
+    bossAttack = [0, 30, 60]
+    print(enemyHP, playerHP, atkP, bossAttack)
 
+    batalha(enemyHP, playerHP, atkP, bossAttack)
 
 else:
     print("")

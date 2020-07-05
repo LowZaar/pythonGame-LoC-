@@ -36,40 +36,21 @@ def endtimer(timer):
     timer = time.strftime("%M:%S", time.gmtime(timer))
     print("Tempo Jogado até sua morte iminente: ", timer)
 
+def endGame(timer):
+    timer = time.time() - timer
+    timer = time.strftime("%M:%S", time.gmtime(timer))
+    print("Tempo decorrido até a sua vitória: ", timer)
+    print("")
 
-def escolhajogo(escolha):
-    if escolha == 1:
-        return "1"
-    elif escolha == 2:
-        return "2"
-    elif escolha == 3:
-        return "3"
-    elif escolha == 4:
-        return "4"
-
-
-def ataquePlayer(atk):
-
-    atk = random.choice(atk)
-    return atk
-
-
-def ataqueNPC(atk):
-    atk = random.choice(atk)
-    return atk
-#atk fora da variavel
-#todo adicionar atk de npc e player na função de batalha
-#randomizar em cada instancia
-
-def batalha(enemyHP, playerhp, atkPlayer, atkNPC):
-    turno = random.randint(0,1)
+def batalha(enemyHP, playerHP, atkPlayer, atkNPC):
+    turno = random.randint(0, 1)
 
     if turno == 1:
         print("Você começa atacando")
     else:
         print("O inimigo lhe ataca primeiro ")
 
-    while enemyHP > 0 and playerhp > 0:
+    while enemyHP > 0 and playerHP > 0:
         if turno == 1:
             turno -= 1
             # atk = ataquePlayer(atkPlayer)
@@ -83,21 +64,20 @@ def batalha(enemyHP, playerhp, atkPlayer, atkNPC):
         if turno == 0 and enemyHP > 0:
             turno += 1
             dano = random.choice(atkNPC)
-            #atkNPC = ataqueNPC(atkNPC)
-            playerhp -= dano
-            if playerhp < 0:
-                playerhp = 0
-            print("O Inimigo lhe causou {} de dano, voce ainda tem {} de vida".format(dano,
-                                                                                      playerHP))
+            playerHP -= dano
+            if playerHP < 0:
+                playerHP = 0
+            print(f"O Inimigo lhe causou {dano} de dano, voce ainda tem {playerHP} de vida")
+
             input("Enter para continuar")
 
     if enemyHP == 0:
-        print("Voce Ganhou a batalha, lhe resta {} de vida".format(playerHP))
+        print(f"Voce Ganhou a batalha, lhe resta {playerHP} de vida")
         return playerHP
         # final da batalha, setar variavel usando esta função
 
     elif playerHP == 0:
-        print("Você morreu, o inimigo ainda vive com {} de vida".format(enemyHP))
+        print(f"Você morreu, o inimigo ainda vive com {enemyHP} de vida")
         time.sleep(3.0)
         return playerHP
         # volta pro começo do jogo
@@ -116,14 +96,14 @@ def batalharandom():
 
 splashscreen()
 start = startjogo()
-clockStart = timer()
+timer = timer()
 playerHP = 100
 atkP = [0, 35, 70]
 atkNPC = [0, 15, 30]
 
 nome = input("Digite o Nome do Aventureiro >> ")
 
-while start:
+while start == True:
     historia.intro(nome)
     print("Escolha aqui")
     print("Qual é a sua escolha?")
@@ -132,49 +112,59 @@ while start:
     etapa1 = historia.etapa1(escolha, nome)
 
     if etapa1 == 2:
+        endtimer(timer)
         start = False
-        continue
-
+        break
 
     historia.intro2(nome)
     print("Escolha aqui")
     print("Qual é a sua escolha?")
     escolha = int(input())
-    etapa2 = historia.etapa2(escolha,nome)
+    etapa2 = historia.etapa2(escolha, nome)
     if etapa2 == 1:
         playerHP -= 30
     elif etapa2 == 2:
         enemyHP = 100
-        batalha = batalha(enemyHP, playerHP, atkP, atkNPC)
-        if batalha == 0:
+        batalha2 = batalha(enemyHP, playerHP, atkP, atkNPC)
+        if batalha2 == 0:
+            endtimer(timer)
             start = False
-            continue
+            break
         else:
-            playerHP = batalha
-            batalha = 0
+            playerHP = batalha2
             print(playerHP)
     elif etapa2 == 3:
         enemyHP = 100
-        batalha = batalha(enemyHP, playerHP, atkP, atkNPC)
-        if batalha == 0:
+        batalha2 = batalha(enemyHP, playerHP, atkP, atkNPC)
+        if batalha2 == 0:
+            endtimer(timer)
             start = False
-            continue
+            break
         else:
-            playerHP = batalha
+            playerHP = batalha2
             print(playerHP)
 
     elif etapa2 == False:
         start = False
+        break
 
     historia.intro3()
     print("Escolha aqui")
     print("Qual é a sua escolha?")
     escolha = int(input())
     etapa3 = historia.etapa3(escolha)
-    if etapa3 == 1 or etapa3 == 2:
+    if etapa3 == 1:
+        playerHP = 100
+    elif etapa3 == 2:
         playerHP = 100
     elif etapa3 == 4:
-        playerHP -= 10
+        roll = random.randint(0, 1)
+        if roll == 1:
+            print("Um Camponês o atinge com uma pedra nas costas")
+            print("- 10 de vida")
+            playerHP -= 10
+        else:
+            print("Você consegue fugir sem problemas")
 
     historia.intro4()
     print("Escolha aqui")
@@ -195,12 +185,13 @@ while start:
         elif etapa41 == 2:
             enemyHP = 100
             batalha41 = batalha(enemyHP, playerHP, atkP, atkNPC)
-            if batalha == False:
+            if batalha41 == 0:
                 start = False
-                continue
+                endtimer(timer)
+                break
             else:
-                playerHP = batalha
-        elif etapa41 == 3: # todo sei la o andrey tem autismo??
+                playerHP = batalha41
+        elif etapa41 == 3:
             print()
         elif etapa41 == 4:
             atkP = [0, 60, 85, 100]
@@ -208,14 +199,12 @@ while start:
         historia.intro5()
         time.sleep(2.0)
 
-    enemyHP = 300
+    enemyHP = 10
     bossAttack = [0, 30, 60]
     print(enemyHP, playerHP, atkP, bossAttack)
 
-    batalha(enemyHP, playerHP, atkP, bossAttack)
+    boss = batalha(enemyHP, playerHP, atkP, bossAttack)
 
-else:
-    print("")
-    print("")
-    print("")
-    startjogo()
+    etapa5 = historia.etapa5(escolha, nome)
+    endGame(timer)
+    start = False
